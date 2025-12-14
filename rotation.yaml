@@ -3,7 +3,7 @@ secrets:
 - name: minio-creds
   env: prod
   vaultwarden:
-    cipherId: a4cb7811-9163-48c5-a206-5c7d34ce4842
+    cipherId: "a4cb7811-9163-48c5-a206-5c7d34ce4842"
     folder: Storage
     collectionIds:
     - 10120e28-cef1-4a09-8bca-ad81c08b9d3a
