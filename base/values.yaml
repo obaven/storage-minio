@@ -1,0 +1,28 @@
+auth:
+  rootUser: admin
+  rootPassword: "change-me-in-secrets"
+persistence:
+  enabled: true
+  storageClass: "storage-bulk"
+  size: 50Gi
+mode: standalone
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 250m
+  limits:
+    memory: 1Gi
+    cpu: 500m
+metrics:
+  enabled: true
+service:
+  type: ClusterIP
+extraEnvVars:
+  - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+    value: "https://auth.obaven.org/application/o/minio/.well-known/openid-configuration"
+  - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+    value: "minio"
+  - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
+    value: "change-me-in-secrets"
+  - name: MINIO_IDENTITY_OPENID_DISPLAY_NAME
+    value: "Login with Authentik"

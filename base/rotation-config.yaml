@@ -1,0 +1,14 @@
+apiVersion: rotator.obaven.org/v1alpha1
+kind: RotationConfig
+metadata:
+  name: minio-creds
+  namespace: storage-system
+spec:
+  targetSecret: minio-creds
+  keys:
+    - rootUser
+    - rootPassword
+  template:
+    rootUser: "admin"
+    rootPassword: "{{ generate_password(length=32) }}"
+  schedule: "0 0 * * 0" # Weekly
