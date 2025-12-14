@@ -1,0 +1,38 @@
+version: v1
+secrets:
+- name: minio-creds
+  env: prod
+  vaultwarden:
+    cipherId: a4cb7811-9163-48c5-a206-5c7d34ce4842
+    folder: Storage
+    collectionIds:
+    - 10120e28-cef1-4a09-8bca-ad81c08b9d3a
+    collections:
+    - data
+    notes: MinIO Root Credentials (Rotated)
+  keys:
+  - name: rootUser
+    type: static
+    value: admin
+  - name: rootPassword
+    type: random
+    length: 32
+  kubernetes:
+    namespace: storage-system
+    secretName: minio-creds
+    path: apps/storage/minio/base/sealed-secrets/sealed-minio-creds.yaml
+  hooks:
+    post:
+    - command: /bin/bash
+      args:
+      - "-c"
+      - |
+        echo "[default]
+        aws_access_key_id=${ROTATOR_KEY_ROOTUSER}
+        aws_secret_access_key=${ROTATOR_KEY_ROOTPASSWORD}" > /tmp/velero_cloud_creds && \
+        kubectl create secret generic velero-s3-creds \
+          --namespace storage-system \
+          --from-file=cloud=/tmp/velero_cloud_creds \
+          --dry-run=client -o yaml | kubectl apply -f - && \
+        rm /tmp/velero_cloud_creds
+      shell: true
