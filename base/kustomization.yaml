@@ -13,3 +13,4 @@ helmCharts:
 
 resources:
   - rotation-config.yaml
+  - ingress.yaml
